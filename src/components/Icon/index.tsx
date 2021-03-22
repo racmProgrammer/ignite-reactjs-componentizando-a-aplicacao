@@ -1,10 +1,13 @@
+// Libs
 import React from "react";
 
+// Interfaces/Types
 interface IconProps {
   name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
   color: string;
 }
 
+// Component
 export function Icon(props: IconProps) {
 
   switch (props.name) {

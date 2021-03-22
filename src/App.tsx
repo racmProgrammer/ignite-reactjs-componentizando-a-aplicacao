@@ -1,18 +1,15 @@
+// Libs
 import { useEffect, useState } from 'react';
-
-import { Button } from './components/Button';
-import { MovieCard } from './components/MovieCard';
-
-// import { SideBar } from './components/SideBar';
-// import { Content } from './components/Content';
-
 import { api } from './services/api';
 
+// Components
+import { Content } from './components/Content';
+import { SideBar } from './components/SideBar';
+
+// Styles
 import './styles/global.scss';
 
-import './styles/sidebar.scss';
-import './styles/content.scss';
-
+// Interfaces/Types
 interface GenreResponseProps {
   id: number;
   name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
@@ -30,20 +27,20 @@ interface MovieProps {
   Runtime: string;
 }
 
+// Component
 export function App() {
+
+  // Verifica o estado de seleção dos gêneros 
   const [selectedGenreId, setSelectedGenreId] = useState(1);
 
-  const [genres, setGenres] = useState<GenreResponseProps[]>([]);
-
+  // Verifica o estado e armazena informações dos filmes de acordo com o gênero selecionado
   const [movies, setMovies] = useState<MovieProps[]>([]);
+
+  // Verifica estado e armazena informações do gênero selecionado 
   const [selectedGenre, setSelectedGenre] = useState<GenreResponseProps>({} as GenreResponseProps);
 
-  useEffect(() => {
-    api.get<GenreResponseProps[]>('genres').then(response => {
-      setGenres(response.data);
-    });
-  }, []);
-
+  
+  // Toda vez que um Gênero for selecionado o useEffect consulta as informações dos filmes daquele gênero e informações do gênero selecionado
   useEffect(() => {
     api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
       setMovies(response.data);
@@ -60,36 +57,10 @@ export function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <nav className="sidebar">
-        <span>Watch<p>Me</p></span>
-
-        <div className="buttons-container">
-          {genres.map(genre => (
-            <Button
-              key={String(genre.id)}
-              title={genre.title}
-              iconName={genre.name}
-              onClick={() => handleClickButton(genre.id)}
-              selected={selectedGenreId === genre.id}
-            />
-          ))}
-        </div>
-
-      </nav>
-
-      <div className="container">
-        <header>
-          <span className="category">Categoria:<span> {selectedGenre.title}</span></span>
-        </header>
-
-        <main>
-          <div className="movies-list">
-            {movies.map(movie => (
-              <MovieCard key ={movie.imdbID} title={movie.Title} poster={movie.Poster} runtime={movie.Runtime} rating={movie.Ratings[0].Value} />
-            ))}
-          </div>
-        </main>
-      </div>
+      
+      <SideBar selectedGenreId={selectedGenreId} onHandleClickButton={handleClickButton}/>
+      <Content selectedGenreTitle={selectedGenre.title} movies={movies}/>
+      
     </div>
   )
 }

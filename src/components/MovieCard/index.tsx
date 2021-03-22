@@ -1,7 +1,11 @@
+
+// Medias
 import { Star, Clock } from 'react-feather';
 
-import '../styles/movie-card.scss';
+// Styles
+import './styles.scss';
 
+// Interfaces/Types
 interface MovieCardProps {
   title: string;
   poster: string;
@@ -9,6 +13,7 @@ interface MovieCardProps {
   runtime: string;
 }
 
+// Component
 export function MovieCard(props: MovieCardProps) {
   return (
     <div className="movie-card">
